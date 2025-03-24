@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previous Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        img {
+            max-width: 100px;
+            height: auto;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Previous Results</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Result Image</th>
+                <th>Prediction</th>
+                <th>Confidence</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in results %}
+            <tr>
+                <td><img src="{{ result.image.url }}" alt="Image"></td>
+                    <td>
+                        {% if result.id %}
+                            <img src="{{ MEDIA_URL }}result_images/{{ result.id }}_result.jpg" alt="Result Image">
+
+                        {% else %}
+                            No result image available
+                        {% endif %}
+                    </td>
+
+                <td>{{ result.prediction }}</td>
+                <td>{{ result.confidence|floatformat:2 }}%</td>
+                <td>{{ result.created_at|date:"F j, Y, g:i a" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No previous results found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Button to go back to the upload page -->
+    <form action="{% url 'upload_image' %}" method="GET">
+        <button type="submit">Back to Upload</button>
+    </form>
+
+</body>
+</html>
