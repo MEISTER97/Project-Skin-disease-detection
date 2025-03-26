@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Prediction Result</h2>
+    <p><strong>Result:</strong> {{ result }}</p>
+    <p><strong>Confidence:</strong> {{ confidence }}%</p>
+
+    <h3>Uploaded Image:</h3>
+    <img src="{{ image_url }}" alt="Uploaded Image" width="300">
+
+    <h3>Result Image:</h3>
+    {% if result_image_url %}
+        <img src="{{ result_image_url }}" alt="Analyzed Image" width="300">
+    {% else %}
+        <p>No result image available.</p>
+    {% endif %}
+
+    <!-- Button to go back to the upload page -->
+    <form action="{% url 'upload_image' %}" method="GET">
+        <button type="submit">Upload Another Image</button>
+    </form>
+
+
+</body>
+</html>
