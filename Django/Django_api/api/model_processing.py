@@ -1,12 +1,41 @@
 import os
 import numpy as np
-from PIL import Image
 import torch.nn.functional as F
-from torchvision import transforms
 import cv2
 import torchvision.models as models
+
 from torchvision.models import ResNet50_Weights
 from django.conf import settings
+from PIL import Image, ExifTags
+from torchvision import transforms
+
+
+def correct_image_orientation(image_path):
+    """Corrects image rotation based on EXIF metadata before OpenCV processing."""
+    try:
+        img = Image.open(image_path)
+
+        # Identify the EXIF orientation tag
+        for orientation in ExifTags.TAGS.keys():
+            if ExifTags.TAGS[orientation] == 'Orientation':
+                break
+
+        # Retrieve EXIF data
+        exif = img._getexif()
+        if exif and orientation in exif:
+            if exif[orientation] == 3:
+                img = img.rotate(180, expand=True)
+            elif exif[orientation] == 6:
+                img = img.rotate(270, expand=True)
+            elif exif[orientation] == 8:
+                img = img.rotate(90, expand=True)
+
+        # Save the corrected image (overwrite original)
+        img.save(image_path)
+        img.close()
+
+    except Exception as e:
+        print(f"Error correcting image orientation: {e}")
 
 
 class GradCAM:
@@ -85,9 +114,10 @@ def load_model():
 
     return model
 
-
-
 def process_image(image_file):
+    # Correct image orientation before opening it
+    correct_image_orientation(image_file)
+
     # Load model
     model = load_model()
 
@@ -98,7 +128,7 @@ def process_image(image_file):
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ])
 
-    # Open image
+    # Open image (now correctly oriented)
     image = Image.open(image_file)
     input_tensor = transform(image).unsqueeze(0)  # Add batch dimension
     input_tensor.requires_grad_(True)  # Enable gradient computation
@@ -113,9 +143,9 @@ def process_image(image_file):
     class_labels = ['nevus', 'melanoma', 'other lesion']
     predicted_class = class_labels[predicted.item()]
 
-    # uncertain prediction lower than 70%
-    if confidence_percentage<70:
-        predicted_class="Uncertain prediction"
+    # Uncertain prediction lower than 70%
+    if confidence_percentage < 70:
+        predicted_class = "Uncertain prediction"
 
     # Generate Grad-CAM heatmap
     grad_cam = GradCAM(model=model)
@@ -133,4 +163,5 @@ def process_image(image_file):
     superimposed_img = cv2.addWeighted(image_np, 0.6, heatmap, 0.4, 0)
 
     return predicted_class, confidence_percentage, superimposed_img
+
 

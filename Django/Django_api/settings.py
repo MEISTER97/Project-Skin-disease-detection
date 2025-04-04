@@ -25,8 +25,7 @@ SECRET_KEY = 'django-insecure-@w5ib)!oh5iyd15)k--u65s)akxcaz4dg#@$umbei!vhj+&2n%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '10.0.2.2', '192.168.31.156']
 
 # Application definition
 
@@ -54,7 +53,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'Django_api.api.middleware.DisableCSRF',  # Custom middleware to disable CSRF
 ]
+
+
 
 ROOT_URLCONF = 'Django_api.urls'
 

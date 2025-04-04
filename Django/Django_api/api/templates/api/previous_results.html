@@ -58,14 +58,14 @@
             {% for result in results %}
             <tr>
                 <td><img src="{{ result.image.url }}" alt="Image"></td>
-                    <td>
-                        {% if result.id %}
-                            <img src="{{ MEDIA_URL }}result_images/{{ result.id }}_result.jpg" alt="Result Image">
+                               <td>
+                {% if result.result_image_url %}
+                    <img src="{{ MEDIA_URL }}{{ result.result_image }}" alt="Result Image">
+                {% else %}
+                    No result image available
+                {% endif %}
+            </td>
 
-                        {% else %}
-                            No result image available
-                        {% endif %}
-                    </td>
 
                 <td>{{ result.prediction }}</td>
                 <td>{{ result.confidence|floatformat:2 }}%</td>
