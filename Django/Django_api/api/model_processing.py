@@ -3,6 +3,8 @@ import numpy as np
 import torch.nn.functional as F
 import cv2
 import torchvision.models as models
+import torch
+import torch.nn as nn
 
 from torchvision.models import ResNet50_Weights
 from django.conf import settings
@@ -11,7 +13,7 @@ from torchvision import transforms
 
 
 def correct_image_orientation(image_path):
-    """Corrects image rotation based on EXIF metadata before OpenCV processing."""
+    """Corrects image rotation based on EXIF(Exchangeable image file format) metadata before OpenCV processing."""
     try:
         img = Image.open(image_path)
 
@@ -90,8 +92,6 @@ class GradCAM:
         return cam
 
 
-import torch
-
 
 def load_model():
     # Correct the model path to point to the correct folder
@@ -103,11 +103,18 @@ def load_model():
     # Define the model architecture (ResNet-50 in this case)
     model = models.resnet50(weights=ResNet50_Weights.DEFAULT)
 
+    num_ftrs = model.fc.in_features
+
     # Modify the final fully connected layer to match the number of output classes (3 classes)
-    model.fc = torch.nn.Linear(in_features=2048, out_features=3)
+    model.fc = nn.Sequential(
+        nn.Linear(num_ftrs, 512),  # Fully connected layer with 512 units
+        nn.ReLU(),  # Apply ReLU activation
+        nn.Dropout(0.2),  # Apply 50% dropout
+        nn.Linear(512, 3)  # Final output layer with 3 classes ('nevus', 'melanoma', 'other lesion')
+    )
 
     # Load the model's state dict
-    model.load_state_dict(torch.load(model_path, map_location=torch.device("cpu")))
+    model.load_state_dict(torch.load(model_path, map_location=torch.device("cpu")), strict=False)
 
     # Set the model to evaluation mode
     model.eval()
