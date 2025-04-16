@@ -14,7 +14,7 @@ This is a Flutter mobile application designed to help users identify whether a s
 The app connects to a Django backend that handles:
 
 - Image processing and model inference
-- Classification using a ResNet-50 model trained on the **HAM10000** dataset from the [ISIC Archive](https://api.isic-archive.com/collections/212/)
+- Classification using a ResNet-50 model trained on the **HAM10000** dataset
 
 > 💡 The model is trained to distinguish between benign and malignant skin lesions.
 
