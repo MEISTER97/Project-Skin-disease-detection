@@ -5,8 +5,12 @@ import 'package:image_picker/image_picker.dart';  // To pick images (use for tak
 import 'package:SkinAI/result_screen.dart';
 import 'previous_results_screen.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:SkinAI/utils/config.dart';
 
-const String BASE_URL = "http://192.168.31.156:8000";
+
+
+final secureStorage = FlutterSecureStorage();
 
 
 class HomeScreen extends StatefulWidget {
@@ -35,12 +39,21 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-
+  // upload the image to the server and getting result
   Future<void> _uploadImage(File imageFile) async {
-    var url = Uri.parse("$BASE_URL/api/flutter_upload/");
+    final accessToken = await secureStorage.read(key: 'access_token');
+    if (accessToken == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Session expired. Please log in again.")),
+      );
+      Navigator.pushReplacementNamed(context, '/signin');
+      return;
+    }
 
+    var url = Uri.parse("$BASE_URL/api/flutter_upload/");
     var request = http.MultipartRequest('POST', url)
-      ..headers['X-Request-Source'] = 'flutter' //custom header for server
+      ..headers['Authorization'] = 'Bearer $accessToken'
+      ..headers['X-Request-Source'] = 'flutter'
       ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
 
     try {
@@ -50,17 +63,15 @@ class _HomeScreenState extends State<HomeScreen> {
         var responseBody = await response.stream.bytesToString();
         var jsonResponse = json.decode(responseBody);
 
-        // Handle missing keys safely
+        // Safely parse and fix URLs
         String imageUrl = jsonResponse['image_url'] ?? '';
         String resultImageUrl = jsonResponse['result_image_url'] ?? '';
         int resultImageWidth = jsonResponse['result_image_width'] ?? 0;
         int resultImageHeight = jsonResponse['result_image_height'] ?? 0;
 
-        // Fix relative URLs
         if (!imageUrl.startsWith('http')) imageUrl = '$BASE_URL$imageUrl';
         if (!resultImageUrl.startsWith('http')) resultImageUrl = '$BASE_URL$resultImageUrl';
 
-        // Navigate to results screen
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -74,6 +85,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         );
+      } else if (response.statusCode == 401) {
+        throw Exception("Unauthorized. Please log in again.");
       } else {
         throw Exception('Upload failed with status code: ${response.statusCode}');
       }
@@ -86,17 +99,32 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
 
+  //function to get previous results up to 10
   Future<List<Map<String, dynamic>>> fetchPreviousResults() async {
+    final accessToken = await secureStorage.read(key: 'access_token');
+    if (accessToken == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Session expired. Please log in again.")),
+      );
+      Navigator.pushReplacementNamed(context, '/signin');
+      return [];
+    }
+
     var url = Uri.parse("$BASE_URL/api/flutter_results/");
     try {
       var response = await http.get(
         url,
-        headers: {"X-Request-Source": "flutter_previous_results"}, // Add custom header
+        headers: {
+          "Authorization": "Bearer $accessToken",
+          "X-Request-Source": "flutter_previous_results"
+        },
       );
 
       if (response.statusCode == 200) {
         var jsonResponse = json.decode(response.body);
         return List<Map<String, dynamic>>.from(jsonResponse['results']);
+      } else if (response.statusCode == 401) {
+        throw Exception("Unauthorized. Please sign in again.");
       } else {
         throw Exception("Failed to load previous results");
       }
@@ -104,6 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
       throw Exception("Error fetching results: ${e.toString()}");
     }
   }
+
 
 
 // Function to navigate to the previous results screen

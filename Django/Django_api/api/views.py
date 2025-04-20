@@ -9,6 +9,11 @@ from .model_processing import process_image
 from .models import PredictionResult
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
+from .serializers import RegisterSerializer
+from rest_framework import status
+from rest_framework.response import Response
 
 def get_next_image_number():
     """Find the next available image number in 'images' folder."""
@@ -22,7 +27,9 @@ def get_next_image_number():
     next_number = max(numbers) + 1 if numbers else 1
     return f"image_{next_number}.jpg"
 
-
+# upload an image from flutter
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 @csrf_exempt
 def upload_image_api(request):
     if request.method == 'POST' and request.headers.get('X-Request-Source') == 'flutter':
@@ -113,6 +120,9 @@ def upload_success_view(request, prediction_id):
     }
     return render(request, "api/result.html", context)
 
+# return results to flutter
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_previous_results_api(request):
     # Check if the request is from Flutter for previous results
     if request.headers.get('X-Request-Source') == 'flutter_previous_results':
@@ -132,6 +142,7 @@ def get_previous_results_api(request):
     return JsonResponse({"error": "Invalid request"}, status=400)
 
 
+#return results to web
 def previous_results(request):
     # Fetch all results ordered by date, most recent first
     results = PredictionResult.objects.all().order_by('-created_at')
@@ -148,5 +159,14 @@ def previous_results(request):
 
     return render(request, 'api/previous_results.html', context)
 
+
+#register a user from flutter(sign up)
+@api_view(['POST'])
+def register_user(request):
+    serializer = RegisterSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return JsonResponse({'message': 'User registered successfully'}, status=201)
+    return JsonResponse(serializer.errors, status=400)
 
 

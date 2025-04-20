@@ -95,7 +95,7 @@ class GradCAM:
 
 def load_model():
     # Correct the model path to point to the correct folder
-    model_path = os.path.join(settings.BASE_DIR, "Django_api", "model", "resnet50_custom_best.pth")
+    model_path = os.path.join(settings.BASE_DIR, "Django_api", "model", "resnet50_skin_lesion_classification.pth")
 
     if not os.path.exists(model_path):
         raise FileNotFoundError(f"Model file not found: {model_path}")
@@ -109,8 +109,8 @@ def load_model():
     model.fc = nn.Sequential(
         nn.Linear(num_ftrs, 512),  # Fully connected layer with 512 units
         nn.ReLU(),  # Apply ReLU activation
-        nn.Dropout(0.2),  # Apply 50% dropout
-        nn.Linear(512, 3)  # Final output layer with 3 classes ('nevus', 'melanoma', 'other lesion')
+        nn.Dropout(0.5),  # Apply 50% dropout
+        nn.Linear(512, 2)  # Final output layer with 2 classes ('benign skin lesion', 'malignant skin lesion')
     )
 
     # Load the model's state dict
@@ -125,8 +125,13 @@ def process_image(image_file):
     # Correct image orientation before opening it
     correct_image_orientation(image_file)
 
-    # Load model
-    model = load_model()
+    # Use the globally loaded model and Grad-CAM
+    global model, grad_cam
+
+    if model is None or grad_cam is None:
+        model = load_model()
+        grad_cam = GradCAM(model)
+
 
     # Preprocess the image
     transform = transforms.Compose([
@@ -147,7 +152,7 @@ def process_image(image_file):
 
     # Confidence and predicted class
     confidence_percentage = confidence.item() * 100
-    class_labels = ['nevus', 'melanoma', 'other lesion']
+    class_labels = ['benign skin lesion', 'malignant skin lesion']
     predicted_class = class_labels[predicted.item()]
 
     # Uncertain prediction lower than 70%
@@ -155,11 +160,10 @@ def process_image(image_file):
         predicted_class = "Uncertain prediction"
 
     # Generate Grad-CAM heatmap
-    grad_cam = GradCAM(model=model)
     cam = grad_cam.generate_cam(input_tensor, predicted.item())  # Pass the predicted class index
 
     # Convert image to numpy and normalize Grad-CAM heatmap
-    image_np = np.array(image.resize((224, 224)))
+    image_np = cv2.cvtColor(np.array(image.resize((224, 224))), cv2.COLOR_RGB2BGR)
     cam = np.squeeze(cam)
     cam = cam - np.min(cam)  # Normalize
     cam = cam / np.max(cam)
@@ -172,3 +176,6 @@ def process_image(image_file):
     return predicted_class, confidence_percentage, superimposed_img
 
 
+# Load model only once when the module is imported
+model = load_model()
+grad_cam = GradCAM(model)

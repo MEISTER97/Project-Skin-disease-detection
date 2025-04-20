@@ -25,7 +25,10 @@ SECRET_KEY = 'django-insecure-@w5ib)!oh5iyd15)k--u65s)akxcaz4dg#@$umbei!vhj+&2n%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '10.0.2.2', '192.168.31.156']
+
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '10.0.2.2','192.168.31.155']
+
+AUTH_USER_MODEL = 'api.CustomUser'
 
 # Application definition
 
@@ -41,8 +44,16 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # my apps
-    'Django_api.api',
+    'Django_api.api.apps.ApiConfig',
+
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
 
 
 MIDDLEWARE = [
