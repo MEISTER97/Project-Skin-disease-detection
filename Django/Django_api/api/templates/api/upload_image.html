@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,31 +6,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Image</title>
     <style>
+        /* Body to center everything in the viewport */
         body {
+            background-image: url("{% static 'background/background_1.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 50px;
         }
+
+        /* Centering the container for the form and content */
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
         form {
             margin: 20px auto;
             padding: 20px;
             border: 1px solid #ccc;
-            width: 50%;
+            width: 100%;
             background-color: #f9f9f9;
             border-radius: 8px;
+            box-sizing: border-box;
         }
+
         button {
-            padding: 10px 20px;
+            padding: 12px 24px;
             background-color: #007bff;
             color: white;
             border: none;
             cursor: pointer;
-            border-radius: 5px;
-            margin-top: 10px;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-top: 15px;
+            width: 100%;
+            box-sizing: border-box;
         }
+
         button:hover {
             background-color: #0056b3;
         }
+
         img {
             max-width: 100%;
             height: auto;
@@ -38,10 +73,29 @@
             border-radius: 5px;
             box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
         }
-        .container {
-            max-width: 600px;
-            margin: auto;
+
+        /* Style for the "View Previous Results" button */
+        .view-results-container {
+            margin-top: 20px;
+            width: 100%;
         }
+
+        .view-results-container a button {
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: center;
+            width: 100%;  /* Make it full width like other buttons */
+        }
+
+        .view-results-container a button:hover {
+            background-color: #0056b3;
+        }
+
     </style>
 </head>
 <body>
@@ -70,13 +124,14 @@
                 <button type="submit">Upload Another Image</button>
             </form>
         {% endif %}
+
+        <!-- Button to View Previous Results - NOW INSIDE THE CONTAINER -->
+        <div class="view-results-container">
+            <a href="{% url 'web_previous_results' %}">
+                <button>View Previous Results</button>
+            </a>
+        </div>
     </div>
-
-    <!-- Button to View Previous Results -->
-    <a href="{% url 'web_previous_results' %}">
-        <button>View Previous Results</button>
-    </a>
-
 
 </body>
 </html>
