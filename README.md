@@ -22,6 +22,21 @@ pip
 
 PostgreSQL
 
+## Development & Experimentation Environment
+
+This project’s virtual environment includes JupyterLab and many scientific libraries to support both API/backend development and interactive model experimentation. 
+
+If you only want to run the backend API server without Jupyter notebooks, you may want to create a minimal environment with just:
+
+- Django
+- Django REST framework
+- PyTorch and torchvision
+- PostgreSQL adapter (psycopg)
+- Other core dependencies as needed
+
+For full interactive development, install the provided environment as is.
+
+
 ⚖️ Project Setup
 
 1. Clone the repository
@@ -54,7 +69,6 @@ It's best to use a virtual environment:
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
-
 
 5. Apply migrations
 
