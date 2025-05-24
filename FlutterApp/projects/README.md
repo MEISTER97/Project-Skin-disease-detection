@@ -26,10 +26,20 @@ The app connects to a Django backend that handles:
 - Android Studio / Xcode
 - Backend running (Django API)
 
-### Setup
+### Clone the Repository
+If your Flutter app is in the same repository, navigate to the Flutter directory:
+cd FlutterApp  
 
-1. Clone the repo:
+### Install Dependencies
+Run this command in the Flutter app folder to install all the packages:
+flutter pub get
 
-```bash
-git clone https://github.com/your-username/flutter-skin-lesion-app.git
-cd flutter-skin-lesion-app
+### Run the App
+Use this command to launch the Flutter app:
+flutter run
+
+Option 2: Using an IDE
+Open the Flutter project in Android Studio or VS Code
+Select a device or emulator from the toolbar
+Click the Run button ▶️
+
