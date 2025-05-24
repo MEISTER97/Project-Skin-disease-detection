@@ -80,17 +80,6 @@ python manage.py runserver
 
 You can now access the project at http://localhost:8000.
 
-📁 Directory Structure
-
-.
-├── Django/               # Django project folder
-│   ├── Django_api/       # Main app folder
-│   ├── api/              # Your custom app
-│   ├── manage.py
-├── .env                  # Environment variables (DO NOT COMMIT)
-├── .gitignore
-├── requirements.txt
-└── README.md
 
 📬 Contact
 
