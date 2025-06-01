@@ -67,14 +67,28 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Adjust based on your design
+      backgroundColor: Colors.transparent, // Let background image show
       body: Stack(
         children: [
+          // Background Image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/start_screen_background.jpg',
+              fit: BoxFit.cover,
+            ),
+          ),
+
+          // Optional overlay for contrast
+          Positioned.fill(
+            child: Container(color: Colors.black.withOpacity(0.2)),
+          ),
+
+          // Lottie Animation (centered and animated)
           Positioned(
-            top: _topPosition, // Animated position
-            left: MediaQuery.of(context).size.width / 2 - _width / 2, // Center horizontally
+            top: _topPosition,
+            left: MediaQuery.of(context).size.width / 2 - _width / 2,
             child: AnimatedSize(
-              duration: Duration(seconds: 2), // Make size change faster too
+              duration: Duration(seconds: 2),
               curve: Curves.easeInOut,
               child: Lottie.asset(
                 'assets/Animation_medical.json',
@@ -88,4 +102,5 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
       ),
     );
   }
+
 }

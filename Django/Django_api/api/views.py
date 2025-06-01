@@ -2,7 +2,7 @@ import cv2
 import os
 from django.conf import settings
 from django.shortcuts import render, redirect,get_object_or_404
-from django.views.decorators.http import require_POST
+from rest_framework.permissions import AllowAny
 
 from .forms import ImageUploadForm
 from .model_processing import process_image
@@ -12,8 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from .serializers import RegisterSerializer
-from rest_framework import status
-from rest_framework.response import Response
+
 
 def get_next_image_number():
     """Find the next available image number in 'images' folder."""
@@ -44,6 +43,7 @@ def upload_image_api(request):
             predicted_class, confidence_percentage, superimposed_img = process_image(image_path)
 
             prediction_result = PredictionResult.objects.create(
+                user=request.user,
                 image=f'images/{image_name}',
                 prediction=predicted_class,
                 confidence=confidence_percentage
@@ -126,7 +126,8 @@ def upload_success_view(request, prediction_id):
 def get_previous_results_api(request):
     # Check if the request is from Flutter for previous results
     if request.headers.get('X-Request-Source') == 'flutter_previous_results':
-        results = PredictionResult.objects.order_by('-created_at')[:10]  # Get last 10 results
+        results = PredictionResult.objects.filter(user=request.user).order_by('-created_at')[:10]
+
         results_data = []
 
         for result in results:
@@ -162,11 +163,13 @@ def previous_results(request):
 
 #register a user from flutter(sign up)
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def register_user(request):
     serializer = RegisterSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
         return JsonResponse({'message': 'User registered successfully'}, status=201)
     return JsonResponse(serializer.errors, status=400)
+
 
 

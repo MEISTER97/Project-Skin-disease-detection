@@ -1,0 +1,5 @@
+# Environment variables file
+.env
+
+# Static and media files 
+media/
