@@ -56,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
 
       try {
-        var response = await request.send().timeout(Duration(seconds: 30));
+        var response = await request.send().timeout(Duration(seconds: 15));
 
         if (response.statusCode == 200) {
           var responseBody = await response.stream.bytesToString();
@@ -99,7 +99,47 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
     else{
-      //handle api for guest user
+      var url = Uri.parse("$BASE_URL/api/flutter_upload/");
+      var request = http.MultipartRequest('POST', url)
+        ..headers['X-Request-Source'] = 'flutter'
+        ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
+
+      try {
+        var response = await request.send().timeout(Duration(seconds: 15));
+
+        if (response.statusCode == 200) {
+          var responseBody = await response.stream.bytesToString();
+          var jsonResponse = json.decode(responseBody);
+
+          String imageUrl = jsonResponse['image_url'] ?? '';
+          String resultImageUrl = jsonResponse['result_image_url'] ?? '';
+          int resultImageWidth = jsonResponse['result_image_width'] ?? 0;
+          int resultImageHeight = jsonResponse['result_image_height'] ?? 0;
+
+          if (!imageUrl.startsWith('http')) imageUrl = '$BASE_URL$imageUrl';
+          if (!resultImageUrl.startsWith('http')) resultImageUrl = '$BASE_URL$resultImageUrl';
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ResultScreen(
+                prediction: jsonResponse['prediction'] ?? 'Unknown',
+                confidence: jsonResponse['confidence'] ?? 0.0,
+                imageUrl: imageUrl,
+                resultImageUrl: resultImageUrl,
+                resultImageWidth: resultImageWidth.toDouble(),
+                resultImageHeight: resultImageHeight.toDouble(),
+              ),
+            ),
+          );
+        } else {
+          throw Exception('Guest upload failed with status code: ${response.statusCode}');
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Guest upload failed: ${e.toString()}")),
+        );
+      }
     }
   }
 

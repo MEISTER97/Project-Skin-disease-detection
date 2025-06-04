@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import CustomUser
 
-
+# Transforms DB objects to JSON for API use
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser

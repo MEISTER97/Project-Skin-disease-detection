@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
-
+#This model stores uploaded images and their associated predictions
 class ImagePrediction(models.Model):
     image = models.ImageField(upload_to='images/')  # Save the uploaded image
     result = models.CharField(max_length=255, blank=True, null=True)  # Store the result from the model
@@ -12,7 +12,8 @@ class ImagePrediction(models.Model):
     def __str__(self):
         return f"{self.result} ({self.confidence}%)"
 
-
+# Stores uploaded image, prediction, Grad-CAM result, user reference, and confidence score into the desire folders.
+#store them also into the database
 class PredictionResult(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -46,6 +47,7 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault("is_superuser", True)
         return self.create_user(email, password, **extra_fields)
 
+# Replaces Django’s default user model to support email-only login
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     is_active = models.BooleanField(default=True)

@@ -10,8 +10,8 @@ from .models import PredictionResult
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import api_view, permission_classes
 from .serializers import RegisterSerializer
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 
 
 def get_next_image_number():
@@ -28,7 +28,8 @@ def get_next_image_number():
 
 # upload an image from flutter
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@authentication_classes([])  # ← disables any default global auth classes
+@permission_classes([AllowAny])  # ← allows both authenticated and guest users
 @csrf_exempt
 def upload_image_api(request):
     if request.method == 'POST' and request.headers.get('X-Request-Source') == 'flutter':
@@ -43,7 +44,7 @@ def upload_image_api(request):
             predicted_class, confidence_percentage, superimposed_img = process_image(image_path)
 
             prediction_result = PredictionResult.objects.create(
-                user=request.user,
+                user=request.user if request.user.is_authenticated else None,
                 image=f'images/{image_name}',
                 prediction=predicted_class,
                 confidence=confidence_percentage
@@ -70,39 +71,39 @@ def upload_image_api(request):
 
     return JsonResponse({"error": "Invalid request"}, status=400)
 
-
-
+# upload an image from web and check if image valid
 def upload_image_web(request):
     form = ImageUploadForm(request.POST or None, request.FILES or None)
 
-    if request.method == 'POST' and form.is_valid():
-        image_instance = form.save()
+    if request.method == 'POST':
+        if form.is_valid():
+            image_instance = form.save()
 
-        new_image_name = get_next_image_number()
-        new_image_path = os.path.join(settings.MEDIA_ROOT, 'images', new_image_name)
-        os.rename(image_instance.image.path, new_image_path)
+            new_image_name = get_next_image_number()
+            new_image_path = os.path.join(settings.MEDIA_ROOT, 'images', new_image_name)
+            os.rename(image_instance.image.path, new_image_path)
 
-        predicted_class, confidence_percentage, superimposed_img = process_image(new_image_path)
+            predicted_class, confidence_percentage, superimposed_img = process_image(new_image_path)
 
-        prediction_result = PredictionResult.objects.create(
-            image=f'images/{new_image_name}',
-            prediction=predicted_class,
-            confidence=confidence_percentage
-        )
+            prediction_result = PredictionResult.objects.create(
+                image=f'images/{new_image_name}',
+                prediction=predicted_class,
+                confidence=confidence_percentage
+            )
 
-        result_image_name = f"result_{prediction_result.id}.jpg"
-        result_img_path = os.path.join(settings.MEDIA_ROOT, 'result_images', result_image_name)
-        os.makedirs(os.path.dirname(result_img_path), exist_ok=True)
-        cv2.imwrite(result_img_path, superimposed_img)
+            result_image_name = f"result_{prediction_result.id}.jpg"
+            result_img_path = os.path.join(settings.MEDIA_ROOT, 'result_images', result_image_name)
+            os.makedirs(os.path.dirname(result_img_path), exist_ok=True)
+            cv2.imwrite(result_img_path, superimposed_img)
 
-        prediction_result.result_image = f'result_images/{result_image_name}'
-        prediction_result.save()
+            prediction_result.result_image = f'result_images/{result_image_name}'
+            prediction_result.save()
 
-        return redirect("upload_success_view", prediction_id=prediction_result.id)
+            return redirect("upload_success_view", prediction_id=prediction_result.id)
 
     return render(request, 'api/upload_image.html', {'form': form})
 
-
+# After a successful upload, this view fetches the result associated with the uploaded image
 def upload_success_view(request, prediction_id):
     prediction_result = get_object_or_404(PredictionResult, id=prediction_id)
 
@@ -120,7 +121,7 @@ def upload_success_view(request, prediction_id):
     }
     return render(request, "api/result.html", context)
 
-# return results to flutter
+# return results to `flutter`
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_previous_results_api(request):
