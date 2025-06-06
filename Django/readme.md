@@ -26,13 +26,6 @@ It serves both:
 
 In addition to the REST API, this project includes:
 
-### Django Admin Panel (`/admin/`)
-
-- Built-in Django Admin for managing:
-  - User accounts
-  - Uploaded images and prediction results
-  - Database records (CRUD operations)
-
 ### Django Web Interface (`/`)
 
 - Web page for:
