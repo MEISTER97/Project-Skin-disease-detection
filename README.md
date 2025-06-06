@@ -48,7 +48,7 @@ README.md # This file
 
 ### 1. Clone the Repository
 
-git clone https://github.com/MEISTER97/skin-cancer-detector.git
+git clone https://github.com/MEISTER97/Project-Skin-disease-detection.git
 cd skin-cancer-detector/backend
 
 ### 2. Set up PostgreSQL
