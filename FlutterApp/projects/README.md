@@ -38,7 +38,7 @@ The app allows users to:
 1️⃣ Clone this repo:
 
 ```bash
-git clone https://github.com/MEISTER97/flutter-skin-lesion-classifier.git
+git clone https://github.com/MEISTER97/Project-Skin-disease-detection/blob/main/FlutterApp/projects.git
 cd flutter-skin-lesion-classifier
 ```
 2️⃣ Install dependencies:
