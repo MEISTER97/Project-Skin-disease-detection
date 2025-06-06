@@ -20,4 +20,7 @@ urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
+# PDF
+path('result/<int:prediction_id>/pdf/', views.download_result_pdf, name='download_result_pdf')
+
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

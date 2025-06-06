@@ -26,11 +26,12 @@ class _SignInScreenState extends State<SignInScreen> {
 
   bool _isLoading = false;
 
-  // This function handles login
+// Handles user login: sends credentials to server, stores tokens, navigates to HomeScreen.
   Future<void> _signIn() async {
     final email = _usernameController.text.trim();
     final password = _passwordController.text.trim();
 
+    // Validate input
     if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please enter both email and password.')),
@@ -38,6 +39,7 @@ class _SignInScreenState extends State<SignInScreen> {
       return;
     }
 
+    // Show loading spinner
     setState(() {
       _isLoading = true;
     });
@@ -55,10 +57,11 @@ class _SignInScreenState extends State<SignInScreen> {
       )
           .timeout(
         const Duration(seconds: 10),
-        onTimeout: () => throw TimeoutException('Login Request timed out'),
+        onTimeout: () => throw TimeoutException('Login request timed out'),
       );
 
       if (response.statusCode == 200) {
+        // Parse tokens from response
         final data = jsonDecode(response.body);
         final accessToken = data['access'];
         final refreshToken = data['refresh'];
@@ -69,6 +72,15 @@ class _SignInScreenState extends State<SignInScreen> {
 
         print('Access Token Saved: $accessToken');
 
+        // Show success message BEFORE navigating
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Login successful!')),
+        );
+
+      // Delay navigation slightly so user sees the message
+        await Future.delayed(Duration(milliseconds: 1200));
+
+        // Navigate to HomeScreen
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomeScreen()),
@@ -76,7 +88,7 @@ class _SignInScreenState extends State<SignInScreen> {
       } else {
         print('Login failed: ${response.body}');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login failed. Please check credentials.')),
+          SnackBar(content: Text('Login failed. Please check your credentials.')),
         );
       }
     } on TimeoutException catch (_) {
@@ -88,11 +100,13 @@ class _SignInScreenState extends State<SignInScreen> {
         SnackBar(content: Text('An error occurred: $e')),
       );
     } finally {
+      // Hide loading spinner
       setState(() {
         _isLoading = false;
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

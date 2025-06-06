@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            ont-size: 18px;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 28px;
+
+        }
+
+        p {
+            margin: 8px 0;
+             font-size: 18px;
+        }
+
+        .image-pair {
+           font-size: 16px;
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .image-wrapper {
+            text-align: center;
+        }
+
+        .image-wrapper img {
+            width: 200px; /* Fixed size */
+            height: 200px;
+            object-fit: contain;
+            border: 1px solid #ccc;
+        }
+
+        .image-wrapper p {
+            margin-top: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2>Prediction Result</h2>
+    <p><strong>Prediction:</strong> {{ result.prediction }}</p>
+    <p><strong>Confidence:</strong> {{ result.confidence|floatformat:2 }}%</p>
+    <p><strong>Date:</strong> {{ result.created_at }}</p>
+
+    <div class="image-pair">
+        {% if result.image %}
+        <div class="image-wrapper">
+            <img src="{{ result.image.path }}" alt="Uploaded Image">
+            <p>Original Image</p>
+        </div>
+        {% endif %}
+
+        {% if result.result_image %}
+        <div class="image-wrapper">
+            <img src="{{ result.result_image.path }}" alt="Result Image">
+            <p>Result Image</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
