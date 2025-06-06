@@ -23,7 +23,7 @@ The project allows users to upload skin lesion images, receive predictions with 
 - User authentication with JWT (Flutter)
 - Secure image upload via API
 - History of previous predictions (for authenticated users)
-- Edge case handling (non-lesion images trigger "Unknown" result if confidence < threshold)
+- Edge case handling (non-lesion images trigger "Uncertain prediction" result if confidence < threshold)
 
 ---
 
