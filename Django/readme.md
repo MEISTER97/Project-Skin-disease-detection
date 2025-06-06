@@ -43,7 +43,7 @@ It serves both:
 
 ```bash
 git clone https://github.com/MEISTER97/Project-Skin-disease-detection.git
-cd django-skin-lesion-backend
+cd Project-Skin-disease-detection/django-skin-lesion-backend
 ```
 ---
 2️⃣ Set up PostgreSQL
