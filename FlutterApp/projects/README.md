@@ -40,7 +40,7 @@ The app allows users to:
 ```bash
 git clone https://github.com/your-username/flutter-skin-lesion-classifier.git
 cd flutter-skin-lesion-classifier
-
+```
 2️⃣ Install dependencies:
 flutter pub get
 
