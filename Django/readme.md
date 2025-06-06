@@ -42,7 +42,7 @@ It serves both:
 ### 1️⃣ Clone the repo
 
 ```bash
-git clone https://github.com/your-username/django-skin-lesion-backend.git
+git clone https://github.com/MEISTER97/Project-Skin-disease-detection.git
 cd django-skin-lesion-backend
 
 ---
