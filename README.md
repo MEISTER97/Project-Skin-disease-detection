@@ -80,7 +80,7 @@ http://localhost:8000/api/
 
 ---
 
-##📱 Frontend (Flutter) Setup
+## 📱 Frontend (Flutter) Setup
 cd ../frontend
 flutter pub get
 flutter run
