@@ -25,6 +25,9 @@ The project allows users to upload skin lesion images, receive predictions with 
 - History of previous predictions (for authenticated users)
 - Edge case handling (non-lesion images trigger "Uncertain prediction" result if confidence < threshold)
 
+- 🌐 Django Web Interface:
+  - Basic web page to upload images manually
+  - View all previous results submitted (via web or Flutter app)
 ---
 
 ## 🗂️ Project Structure
