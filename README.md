@@ -119,15 +119,14 @@ Train-validation split: 80-20
 
 Grad-CAM used to visualize model predictions
 
-Results:
-Accuracy: 88.03%
+### Results
 
-Precision: 67.47%
+- **Accuracy:** 88.03%
+- **Precision:** 67.47%
+- **Recall:** 74.50%
+- **F1 Score:** 70.81%
 
-Recall: 74.50%
-
-F1 Score: 70.81%
-"We achieved an 88.03% prediction accuracy, which is quite decent. The model generalizes well on the validation set and shows good sensitivity (recall), which is important for medical diagnosis."
+_We achieved an **88.03% prediction accuracy**, which is quite decent for a medical image classification task. The model generalizes well on the validation set and shows good sensitivity (**recall**), which is crucial in detecting malignant cases._
 
 ---
 ## 🧪 Edge Case Testing
