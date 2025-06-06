@@ -22,7 +22,7 @@ It serves both:
 
 ---
 
-## 🌐 Web Interface and Django Admin
+## 🌐 Web Interface
 
 In addition to the REST API, this project includes:
 
@@ -38,7 +38,6 @@ In addition to the REST API, this project includes:
 - `/` → Image upload form
 - `/results/` → List of all predictions with timestamps
 
----
 
 This allows both:
 ✅ Non-technical users to upload and view results via web  
