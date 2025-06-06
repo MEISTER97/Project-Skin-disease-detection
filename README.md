@@ -2,6 +2,9 @@
 
 A complete full-stack project for **skin lesion classification (benign vs malignant)** using Deep Learning.  
 
+**End-to-End Skin Lesion Detection System using Deep Learning, Django REST API, and Flutter Mobile App.**
+
+
 The system consists of:
 
 - 🧠 **Machine Learning** model trained in JupyterLab (ResNet-50, PyTorch)
