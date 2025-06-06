@@ -22,6 +22,37 @@ It serves both:
 
 ---
 
+## 🌐 Web Interface and Django Admin
+
+In addition to the REST API, this project includes:
+
+### Django Admin Panel (`/admin/`)
+
+- Built-in Django Admin for managing:
+  - User accounts
+  - Uploaded images and prediction results
+  - Database records (CRUD operations)
+
+### Django Web Interface (`/`)
+
+- Web page for:
+  - Uploading images manually through browser
+  - Viewing history of all previous uploaded results (images + predictions)
+- Results are synchronized with the mobile app and stored in the PostgreSQL database.
+
+**Example pages:**
+
+- `/` → Image upload form
+- `/results/` → List of all predictions with timestamps
+
+---
+
+This allows both:
+✅ Non-technical users to upload and view results via web  
+✅ Admins to manage the system via the Django admin panel
+
+---
+
 ## 🛠️ Getting Started
 
 ### Prerequisites
