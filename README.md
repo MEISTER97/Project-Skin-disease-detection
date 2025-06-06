@@ -97,7 +97,7 @@ Result_screen.dart: Displays prediction and Grad-CAM
 Previous_results_screen.dart: User's past results
 
 ---
-##📒 Model Training (JupyterLab)
+## 📒 Model Training (JupyterLab)
 Model training notebooks are in /model-training/.
 Key notebook: Skin_lesion_classification.ipynb
 
@@ -127,7 +127,7 @@ F1 Score: 70.81%
 "We achieved an 88.03% prediction accuracy, which is quite decent. The model generalizes well on the validation set and shows good sensitivity (recall), which is important for medical diagnosis."
 
 ---
-##🧪 Edge Case Testing
+## 🧪 Edge Case Testing
 To evaluate the model robustness, we tested it with 20+ out-of-distribution (OOD) images:
 cars, animals, nature, and persons.
 
@@ -149,7 +149,7 @@ CNN models like ResNet-50 do not inherently detect OOD images → threshold tuni
 Lowering the threshold to 0.8 improves robustness and helps avoid misclassification of random images.
 
 ---
-##🚧 Known Challenges
+## 🚧 Known Challenges
 CNN models can be overconfident on OOD images → mitigated with threshold and future work could include adding explicit OOD training samples.
 
 Dataset imbalance handled via class weights and augmentation.
@@ -159,12 +159,12 @@ Deployment complexity handled by converting PyTorch training code to efficient i
 Flutter-Django interaction handled securely via JWT authentication.
 
 ---
-##📬 Contact
+## 📬 Contact
 Created by Man Tran
 Feel free to reach out via: mantran1997@gmail.com
 Or open an Issue on this GitHub repo if you have any questions or feedback.
 
-##📄 License
+## 📄 License
 This project is for educational/research purposes.
 Feel free to use it, improve it, and share your feedback!
 
