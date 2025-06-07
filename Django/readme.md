@@ -22,21 +22,21 @@ It serves both:
 
 ---
 
-## 🌐 Web Interface
+## 🌐 Web Interface (Basic)
 
-In addition to the REST API, this project includes:
+In addition to the REST API, this project provides a **basic HTML upload form** for manual testing.
 
-### Django Web Interface (`/`)
+### Pages:
 
-- Web page for:
-  - Uploading images manually through browser
-  - Viewing history of all previous uploaded results (images + predictions)
-- Results are synchronized with the mobile app and stored in the PostgreSQL database.
+- `/api/upload/` → Simple web form to upload an image (available for browser testing)
+- `/api/upload/<n>/` → Result web page for the uploaded image (`n` = image ID)
+- `/api/previous-results/` → List of all previous predictions by all users and guests 
 
-**Example pages:**
+### Notes:
 
-- `/` → Image upload form
-- `/results/` → List of all predictions with timestamps
+- There is no full web front-end — the `/api/upload/` form is mainly for testing the API manually via browser.
+- Predictions and history are synchronized with the mobile app and stored in the PostgreSQL database.
+- Developers can also access the default Django admin panel at `/admin/` to view database records.
 
 
 This allows both:
