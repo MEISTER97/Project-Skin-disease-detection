@@ -31,7 +31,6 @@ def get_next_image_number():
 
 # upload an image from flutter
 @api_view(['POST'])
-@authentication_classes([])  # Disable any default authentication for this endpoint
 @permission_classes([AllowAny])  # Allow access to any user, authenticated or not
 @csrf_exempt
 def upload_image_api(request):
