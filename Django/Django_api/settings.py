@@ -34,7 +34,7 @@ if not SECRET_KEY:
 DEBUG = True
 
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '10.0.2.2','192.168.31.156']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 AUTH_USER_MODEL = 'api.CustomUser'
 
