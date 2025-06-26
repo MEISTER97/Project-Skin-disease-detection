@@ -94,6 +94,5 @@ python manage.py migrate
 
 6️⃣ Run the development server
 python manage.py runserver
-Backend will be available at: http://localhost:8000
-
+Backend will be available at: http://localhost:8000/api/upload/
 
