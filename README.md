@@ -32,10 +32,11 @@ The project allows users to upload skin lesion images, receive predictions with 
 
 ## 🗂️ Project Structure
 
-/backend/ # Django REST API backend
-/frontend/ # Flutter mobile app
-/model-training/ # JupyterLab notebooks for model training & experiments
-README.md # This file
+- /backend/ # Django REST API backend (Django)
+- /frontend/ # Flutter mobile app (FlutterApp/projects)
+- /model-training/ # JupyterLab notebooks for model training & experiments (JupyterLab)
+- -/docs/ # Documents of the project
+- README.md # This file
 
 
 ---
@@ -50,7 +51,7 @@ README.md # This file
 
 ---
 
-## ⚙️ Backend Setup
+## ⚙️ Backend Setup (Django)
 
 ### 1. Clone the Repository
 
