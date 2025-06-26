@@ -82,8 +82,9 @@ python manage.py migrate
 ### 6. Run Development Server
 python manage.py runserver
 
-http://localhost:8000/api/
-
+http://localhost:8000/api/upload/ 
+OR
+http://127.0.0.1:8000/api/upload/ 
 ---
 
 ## 📱 Frontend (Flutter) Setup
